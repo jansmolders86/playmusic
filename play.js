@@ -391,6 +391,33 @@ PlayMusic.prototype.getArtist = function (artistId, includeAlbums, topTrackCount
     });
 };
 
+
+
+PlayMusic.prototype.getAlbumEntries = function(albumid, success, error){
+	var qp = {
+		"nid": albumid,
+		"include-tracks": true
+	};
+	var qstring = querystring.stringify(qp);
+	this.request(
+	{
+		method: "GET",
+		url: this._baseURL  'fetchalbum?'  qstring,
+		success: function(data, res)
+		{
+			success(JSON.parse(data).tracks);
+		},
+		error: function(data, err, res)
+		{
+			error(
+				[
+					"error getting album tracks", res.statusCode, data, err
+
+				]);
+		}
+	});
+ };
+
 PlayMusic.prototype.success = function (success, data) {
     success = typeof success === "function" ? success : function(data) {
         console.log(util.inspect(data, {depth: null, colors: true}));
